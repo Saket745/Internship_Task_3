@@ -14,8 +14,8 @@ app = FastAPI(title="Nebula Glass API")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), "models", "character_cnn.onnx")
 
-# EMNIST Balanced Mapping (47 classes)
-CLASSES = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghnqrt"
+# EMNIST ByClass Mapping (62 classes)
+CLASSES = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 # Global session variable
 ort_session = None

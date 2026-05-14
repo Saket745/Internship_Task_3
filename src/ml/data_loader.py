@@ -39,13 +39,13 @@ def get_transforms(augment=False):
 
 def get_data_loaders(batch_size=64, data_dir='./data'):
     """
-    Downloads EMNIST (Balanced split) and returns train/test DataLoaders.
-    The 'Balanced' split contains 131,600 samples across 47 classes.
+    Downloads EMNIST (ByClass split) and returns train/test DataLoaders.
+    The 'ByClass' split contains ~814,255 samples across 62 classes.
     """
     
     train_dataset = datasets.EMNIST(
         root=data_dir, 
-        split='balanced', 
+        split='byclass', 
         train=True, 
         download=True, 
         transform=get_transforms(augment=True)
@@ -53,15 +53,15 @@ def get_data_loaders(batch_size=64, data_dir='./data'):
 
     test_dataset = datasets.EMNIST(
         root=data_dir, 
-        split='balanced', 
+        split='byclass', 
         train=False, 
         download=True, 
         transform=get_transforms(augment=False)
     )
 
-    # num_workers=2 for better CPU utilization on Windows
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
+    # num_workers=0 for better stability on Windows
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
 
     return train_loader, test_loader
 

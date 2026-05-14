@@ -28,10 +28,10 @@ class BasicBlock(nn.Module):
 
 class ResNet(nn.Module):
     """
-    ResNet architecture for EMNIST (47 classes: Balanced Split).
+    ResNet architecture for EMNIST (62 classes: ByClass Split).
     Input: (1, 28, 28)
     """
-    def __init__(self, block, num_blocks, num_classes=47):
+    def __init__(self, block, num_blocks, num_classes=62):
         super(ResNet, self).__init__()
         self.in_planes = 64
 
@@ -44,7 +44,22 @@ class ResNet(nn.Module):
         self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
         self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
         
+        self.dropout = nn.Dropout(0.5)
         self.linear = nn.Linear(512 * block.expansion, num_classes)
+
+        # Weight initialization
+        self._initialize_weights()
+
+    def _initialize_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+            elif isinstance(m, nn.BatchNorm2d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+            elif isinstance(m, nn.Linear):
+                nn.init.normal_(m.weight, 0, 0.01)
+                nn.init.constant_(m.bias, 0)
 
     def _make_layer(self, block, planes, num_blocks, stride):
         strides = [stride] + [1]*(num_blocks-1)
@@ -62,20 +77,35 @@ class ResNet(nn.Module):
         out = self.layer4(out)
         out = F.adaptive_avg_pool2d(out, (1, 1))
         out = out.view(out.size(0), -1)
+        out = self.dropout(out)
         out = self.linear(out)
         return out
 
-def CharacterCNN(num_classes=47):
-    # Rename function to return a ResNet18 to avoid breaking train.py
-    # ResNet18 has [2, 2, 2, 2] blocks
+def ResNet9(num_classes=62):
+    """ResNet-9 is often superior for smaller 28x28 images."""
+    return ResNet(BasicBlock, [1, 1, 1, 1], num_classes=num_classes)
+
+def ResNet18(num_classes=62):
+    """Standard ResNet-18."""
     return ResNet(BasicBlock, [2, 2, 2, 2], num_classes=num_classes)
+
+def CharacterCNN(num_classes=62, version='resnet18'):
+    """
+    Factory function for character recognition model.
+    Defaults to ResNet-18 for robustness.
+    """
+    if version.lower() == 'resnet9':
+        return ResNet9(num_classes=num_classes)
+    return ResNet18(num_classes=num_classes)
 
 if __name__ == "__main__":
     # Test model shape
-    model = CharacterCNN()
+    num_classes = 47
+    model = CharacterCNN(num_classes=num_classes)
     dummy_input = torch.randn(1, 1, 28, 28)
     output = model(dummy_input)
     print(f"Input Shape: {dummy_input.shape}")
     print(f"Output Shape: {output.shape}")
-    assert output.shape == (1, 47)
+    print(f"Parameters: {sum(p.numel() for p in model.parameters()):,}")
+    assert output.shape == (1, num_classes)
     print("ResNet architecture verified.")
