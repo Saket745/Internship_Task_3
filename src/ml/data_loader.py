@@ -8,6 +8,10 @@ import torchvision.transforms.functional as TF
 from PIL import Image
 import numpy as np
 
+def emnist_fix_orientation(img):
+    """Correct EMNIST orientation (swap X and Y)"""
+    return TF.hflip(TF.rotate(img, -90, interpolation=TF.InterpolationMode.BILINEAR))
+
 def get_transforms(augment=False):
     """
     Returns transforms for EMNIST. 
@@ -17,7 +21,7 @@ def get_transforms(augment=False):
     # EMNIST ByClass approximate mean/std: 0.1736, 0.3317
     transform_list = [
         # Correct EMNIST orientation (swap X and Y)
-        transforms.Lambda(lambda img: TF.hflip(TF.rotate(img, -90, interpolation=TF.InterpolationMode.BILINEAR))),
+        transforms.Lambda(emnist_fix_orientation),
         transforms.ToTensor(),
         transforms.Normalize((0.1736,), (0.3317,))
     ]
@@ -55,9 +59,9 @@ def get_data_loaders(batch_size=64, data_dir='./data'):
         transform=get_transforms(augment=False)
     )
 
-    # num_workers=0 is safer for initial testing on Windows
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+    # num_workers=2 for better CPU utilization on Windows
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
 
     return train_loader, test_loader
 
