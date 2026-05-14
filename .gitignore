@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.mlflow/
+mlruns/
+*.onnx
+
+# Data
+data/
+
+# OS
+.DS_Store
+Thumbs.db

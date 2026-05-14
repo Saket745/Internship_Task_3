@@ -1,0 +1,23 @@
+# Machine Learning
+torch
+torchvision
+numpy
+pandas
+scikit-learn
+mlflow
+onnx
+onnxruntime
+Pillow
+matplotlib
+
+# Backend API
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+
+# Testing & Linting
+pytest
+httpx
+black
+flake8

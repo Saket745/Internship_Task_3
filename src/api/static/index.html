@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebula Glass | Neural Character Intelligence</title>
+    <meta name="description" content="State-of-the-art handwritten character recognition using ResNet and EMNIST.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="nebula-bg"></div>
+    
+    <div class="glass-app">
+        <header>
+            <div class="logo">
+                <div class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                </div>
+                <h1>NEBU<span>LA</span></h1>
+            </div>
+            <div class="model-badge">
+                <span class="status-dot"></span>
+                <span class="status-text">Intelligence: EMNIST-CNN v2</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="canvas-section">
+                <div class="section-header">
+                    <h2>Neural Input Canvas</h2>
+                    <div class="canvas-toolbar">
+                        <button id="clearBtn" class="tool-btn" title="Clear Canvas">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                            Clear
+                        </button>
+                        <button id="undoBtn" class="tool-btn" title="Undo Stroke">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"></path><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
+                        </button>
+                        <div class="divider"></div>
+                        <input type="range" id="brushSize" min="5" max="35" value="18" title="Brush Calibration">
+                    </div>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="drawingCanvas" width="450" height="450"></canvas>
+                </div>
+            </section>
+
+            <section class="prediction-section">
+                <div class="panel prediction-box">
+                    <h3>Classification Result</h3>
+                    <div id="predictionResult">-</div>
+                </div>
+
+                <div class="panel confidence-panel">
+                    <div class="metric-label">
+                        <span>Confidence Level</span>
+                        <span id="confidenceValue">0%</span>
+                    </div>
+                    <div class="progress-track">
+                        <div id="confidenceBar" class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <button id="predictBtn" class="analyze-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9"></path></svg>
+                    RUN INFERENCE
+                </button>
+            </section>
+        </main>
+
+        <footer>
+            <p>Antigravity Neural Engine • Built for CodeAlpha Internship</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
