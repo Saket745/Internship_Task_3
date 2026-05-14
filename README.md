@@ -4,14 +4,15 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-ee4c2c?logo=pytorch)](https://pytorch.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.95%2B-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![MLflow](https://img.shields.io/badge/MLflow-2.3%2B-0194E2?logo=mlflow)](https://mlflow.org/)
+[![ONNX](https://img.shields.io/badge/ONNX-Inference-005ced?logo=onnx)](https://onnx.ai/)
 
-A high-performance, deep-learning powered handwriting recognition system designed to identify 62 distinct character classes (0-9, A-Z, a-z) from the EMNIST 'ByClass' dataset. This project implements a robust **ResNet-18** architecture, optimized for speed and accuracy, with a complete end-to-end pipeline from training to real-time web inference.
+A high-performance, deep-learning powered handwriting recognition system designed to identify 62 distinct character classes (0-9, A-Z, a-z). This project implements a robust **ResNet-18** architecture, optimized for speed and accuracy, with a complete end-to-end pipeline from training to real-time web inference.
 
 ---
 
 ## 🏗️ Architecture Overview
 
-The system is built with a modular architecture that separates the training pipeline from the inference service.
+The system is built with a decoupled architecture, ensuring high scalability and low-latency inference.
 
 ```mermaid
 graph TD
@@ -49,91 +50,115 @@ graph TD
     MODEL_ONNX -- "Load" --> ORT
 ```
 
-### Key Components
+### Technical Stack
 
--   **Deep Learning Model**: A custom **ResNet-18** implementation tailored for $28 \times 28$ grayscale images. It uses residual blocks to prevent vanishing gradients and achieve higher accuracy on the complex 62-class EMNIST dataset.
--   **Training Pipeline**: Includes GPU-accelerated training, automated data augmentation, and real-time validation metrics.
--   **Experiment Tracking**: Integrated with **MLflow** to track hyperparameters (learning rate, batch size) and metrics (accuracy, loss) across different runs.
--   **Inference Service**: Powered by **FastAPI** and **ONNX Runtime**. The model is exported to ONNX format to ensure ultra-low latency inference in production.
--   **Web UI**: A sleek drawing interface where users can sketch characters and receive instant recognition results with confidence scores.
-
----
-
-## ✨ Features
-
--   **Full Alphanumeric Support**: Recognizes 62 classes including digits (0-9), uppercase (A-Z), and lowercase (a-z).
--   **State-of-the-Art Model**: Uses ResNet-18 architecture, providing superior performance compared to standard CNNs.
--   **High Performance**: Model optimized via ONNX for sub-millisecond inference times.
--   **Scalable Backend**: FastAPI implementation supporting concurrent requests and asynchronous processing.
--   **MLOps Ready**: Full MLflow integration for experiment versioning and reproducibility.
--   **GPU Optimized**: Automatic CUDA detection and utilization for training speedups.
+-   **Model Architecture**: Custom **ResNet-18** with residual skip connections to overcome vanishing gradients in deep networks.
+-   **Inference Pipeline**: Utilizes **ONNX Runtime** for cross-platform, hardware-accelerated inference.
+-   **Experiment Management**: **MLflow** tracks hyperparameters, metrics, and model versions.
+-   **API Framework**: **FastAPI** provides a high-performance, asynchronous interface for real-time interaction.
+-   **Data Processing**: Optimized orientation correction and normalization for EMNIST datasets.
 
 ---
 
-## 🚀 Getting Started
+## 📊 Dataset Reference
 
-### 1. Prerequisites
-- Python 3.12+
-- CUDA-capable GPU (optional, for faster training)
-- Git
+This project utilizes the **Extended MNIST (EMNIST)** dataset, a standard benchmark for handwritten character recognition.
 
-### 2. Installation
-Clone the repository and install dependencies:
+-   **Dataset**: EMNIST (ByClass Split)
+-   **Source**: [Kaggle - EMNIST Dataset by Crawford](https://www.kaggle.com/datasets/crawford/emnist)
+-   **Scale**: ~814,255 images
+-   **Classes**: 62 (0-9, A-Z, a-z)
+-   **Format**: $28 \times 28$ Grayscale (inverted and transposed)
+
+---
+
+## 🧠 Model Architecture
+
+The core recognition engine uses a **ResNet-18** architecture, specifically adapted for single-channel grayscale images.
+
+| Layer Type | Configuration | Output Shape |
+| :--- | :--- | :--- |
+| **Input** | Grayscale Image | (1, 28, 28) |
+| **Initial Conv** | 64 filters, 3x3 | (64, 28, 28) |
+| **ResBlock 1** | 2 blocks, 64 filters | (64, 28, 28) |
+| **ResBlock 2** | 2 blocks, 128 filters | (128, 14, 14) |
+| **ResBlock 3** | 2 blocks, 256 filters | (256, 7, 7) |
+| **ResBlock 4** | 2 blocks, 512 filters | (512, 4, 4) |
+| **Global Pool** | Adaptive Avg Pool | (512, 1, 1) |
+| **Fully Connected**| Softmax Output | (62,) |
+
+---
+
+## 🚀 Installation & Setup
+
+### 1. Environment Setup
+Recommended Python version: `3.12`.
+
 ```bash
+# Clone the repository
 git clone https://github.com/Saket745/Internship_Task_3.git
 cd Internship_Task_3
+
+# Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 3. Training the Model
-To start the full training pipeline with MLflow tracking:
+### 2. Training Workflow
+To initiate a full training cycle with MLflow tracking:
+
 ```bash
 python -m src.ml.run_full_training
 ```
-You can monitor the training progress by running the MLflow UI:
+
+To view training logs and metrics:
 ```bash
 mlflow ui
 ```
 
-### 4. Running the API
-Start the FastAPI server:
+### 3. Real-time Inference
+Deploy the FastAPI server:
+
 ```bash
 python -m src.api.main
 ```
-Access the web interface at `http://localhost:8000`.
 
----
-
-## 📊 Dataset
-The model is trained on the **EMNIST (Extended MNIST)** dataset, specifically the **ByClass** split:
-- **Total Images**: ~814,255
-- **Classes**: 62 (Digits + Letters)
-- **Image Size**: $28 \times 28$ (Grayscale)
+Access the interactive drawing dashboard at: `http://localhost:8000`
 
 ---
 
 ## 🛠️ Project Structure
+
 ```text
 Task 3/
-├── data/               # Dataset storage
-├── models/             # Saved .pth and .onnx models
+├── data/               # EMNIST dataset and Kaggle CSVs
+├── models/             # Production-ready .onnx and .pth files
 ├── src/
-│   ├── ml/             # Training & Model logic
-│   │   ├── model.py    # ResNet architecture
-│   │   ├── train.py    # Training scripts
+│   ├── ml/             # Machine Learning logic (PyTorch)
+│   │   ├── model.py    # ResNet implementation
+│   │   ├── train.py    # Training routines
 │   │   └── data_loader.py
-│   └── api/            # Inference & Web logic
-│       ├── main.py     # FastAPI application
-│       └── static/     # Frontend assets
-├── tests/              # Unit tests
-└── mlruns/             # MLflow tracking data
+│   └── api/            # Inference & Backend (FastAPI)
+│       ├── main.py     # API entry point
+│       └── static/     # Web-based drawing interface
+├── mlruns/             # MLflow local tracking database
+└── tests/              # Performance and logic verification
 ```
 
 ---
 
-## 🤝 Acknowledgments
-- **EMNIST Dataset**: Provided by NIST.
-- **Frameworks**: PyTorch, FastAPI, ONNX.
-- **Architecture**: Inspired by the ResNet paper (He et al.).
+## ✨ Key Features
+
+-   **State-of-the-Art Accuracy**: ResNet-18 achieves significant gains over traditional CNNs on the 62-class challenge.
+-   **Ultra-low Latency**: Optimized ONNX inference for seamless user experience.
+-   **Robust Preprocessing**: Custom orientation correction to handle EMNIST's native transposition quirk.
+-   **Production Ready**: Asynchronous FastAPI backend designed for concurrency.
+-   **Experiment Versioning**: Full traceability of model improvements via MLflow.
+
+---
+
+## 📜 License
+This project is for educational purposes as part of an internship program. Dataset licenses follow the original NIST/Kaggle terms.
