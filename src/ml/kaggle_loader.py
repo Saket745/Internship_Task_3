@@ -29,7 +29,7 @@ class KaggleEMNISTDataset(Dataset):
         return image, label
 
 def fix_orientation(img):
-    return img.transpose(Image.TRANSPOSE)
+    return img.transpose(Image.Transpose.TRANSPOSE)
 
 def get_kaggle_loaders(batch_size=128, data_dir='./data/kaggle2'):
     transform = transforms.Compose([

@@ -6,7 +6,7 @@ print("Starting data test...")
 start = time.time()
 train_dataset = datasets.EMNIST(
     root='./data', 
-    split='balanced', 
+    split='byclass', 
     train=True, 
     download=False
 )

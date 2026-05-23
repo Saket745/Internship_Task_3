@@ -8,6 +8,7 @@ mlflow
 onnx
 onnxruntime
 Pillow
+opencv-python
 matplotlib
 
 # Backend API

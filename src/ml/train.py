@@ -15,7 +15,7 @@ def train_model(epochs=10, batch_size=128, learning_rate=0.001):
     mlflow.set_experiment("EMNIST_Character_Recognition")
     
     train_loader, test_loader = get_data_loaders(batch_size=batch_size)
-    model = CharacterCNN(num_classes=47).to(device)
+    model = CharacterCNN(num_classes=62).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 

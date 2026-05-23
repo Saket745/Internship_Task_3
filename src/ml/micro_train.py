@@ -7,14 +7,14 @@ from torch.utils.data import DataLoader
 
 def micro_train():
     device = torch.device('cpu')
-    model = CharacterCNN(num_classes=47).to(device)
+    model = CharacterCNN(num_classes=62).to(device)
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     
     print("Loading data...")
     train_dataset = datasets.EMNIST(
         root='./data', 
-        split='balanced', 
+        split='byclass', 
         train=True, 
         transform=get_transforms(augment=True)
     )

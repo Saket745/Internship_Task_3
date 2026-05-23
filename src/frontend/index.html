@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwritten Character Recognition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Handwritten Character Recognition</h1>
+            <p>Draw a digit or letter below</p>
+        </header>
+
+        <main class="app-main">
+            <div class="canvas-container">
+                <canvas id="drawingCanvas" width="280" height="280" class="drawing-canvas"></canvas>
+                <div class="button-group">
+                    <button id="clearBtn" class="btn clear-btn">Clear</button>
+                    <button id="predictBtn" class="btn predict-btn">Predict</button>
+                </div>
+            </div>
+
+            <div id="resultContainer" class="result-container empty">
+                <p id="resultText">Draw a character above and click predict!</p>
+            </div>
+        </main>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
