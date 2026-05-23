@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 import os
 import io
 import numpy as np
@@ -10,6 +11,15 @@ import onnxruntime as ort
 import base64
 
 app = FastAPI(title="Nebula Glass API")
+
+# CORS Middleware — allows frontend access from any origin
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Path discovery
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
