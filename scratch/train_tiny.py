@@ -7,7 +7,7 @@ import os
 def train_tiny():
     device = torch.device("cpu")
     train_loader, _ = get_data_loaders(batch_size=8)
-    model = CharacterCNN(num_classes=47).to(device)
+    model = CharacterCNN(num_classes=62).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters())
     

@@ -10,11 +10,9 @@ class CharacterInference:
         self.session = ort.InferenceSession(model_path)
         self.input_name = self.session.get_inputs()[0].name
         
-        # Mapping for EMNIST Balanced (47 classes)
-        # 0-9: 0-9
-        # 10-35: A-Z
-        # 36-46: a,b,d,e,f,g,h,n,q,r,t
-        self.mapping = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabdefghnqrt"
+        # Mapping for EMNIST ByClass (62 classes)
+        # 0-9: digits, 10-35: A-Z, 36-61: a-z
+        self.mapping = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
     def predict(self, image_tensor):
         """
